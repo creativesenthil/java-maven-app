@@ -4,7 +4,7 @@ pipeline {
         maven 'Maven'
     }
     environment {
-        DOCKER_IMAGE = "creativesenthil/java-maven-app"
+        DOCKER_IMAGE = "senthilkumarsoundararajan/java-maven-app"
         DOCKER_TAG = "${BUILD_NUMBER}"
         SONAR_HOST = "http://44.201.181.219:9000"
     }
