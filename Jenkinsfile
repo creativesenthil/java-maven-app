@@ -58,6 +58,23 @@ pipeline {
             }
         }
     }
+    stage('Update Manifest') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'github-creds',
+            usernameVariable: 'GIT_USER',
+            passwordVariable: 'GIT_TOKEN')]) {
+            sh '''
+                git config --global user.email "jenkins@ci.com"
+                git config --global user.name "Jenkins"
+                sed -i "s|image: senthilkumarsoundararajan/java-maven-app:.*|image: senthilkumarsoundararajan/java-maven-app:${BUILD_NUMBER}|g" deployment.yaml
+                git add deployment.yaml
+                git commit -m "Update image tag to build ${BUILD_NUMBER}" || echo "No changes"
+                git push https://$GIT_USER:$GIT_TOKEN@github.com/creativesenthil/java-maven-app.git main
+            '''
+        }
+    }
+}
     post {
         success {
             echo '✅ Pipeline completed successfully!'
