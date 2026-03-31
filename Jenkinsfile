@@ -6,6 +6,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "creativesenthil/java-maven-app"
         DOCKER_TAG = "${BUILD_NUMBER}"
+        SONAR_HOST = "http://44.201.181.219:9000"
     }
     stages {
         stage('Checkout') {
@@ -18,6 +19,20 @@ pipeline {
             steps {
                 echo 'Building with Maven...'
                 sh 'mvn clean package -DskipTests'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=java-maven-app'
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
         stage('Run Tests') {
@@ -45,10 +60,10 @@ pipeline {
     }
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo '✅ Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed!'
+            echo '❌ Pipeline failed!'
         }
     }
 }
