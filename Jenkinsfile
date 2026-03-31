@@ -83,7 +83,7 @@ pipeline {
                         git checkout main
 
                         # 🔥 IMPORTANT FIX (Prevents push failure)
-                        git pull origin main
+                        git pull --rebase origin main
 
                         sed -i "s|image: senthilkumarsoundararajan/java-maven-app:.*|image: senthilkumarsoundararajan/java-maven-app:${BUILD_NUMBER}|g" deployment.yaml
 
