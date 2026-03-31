@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: java-maven-app
-        image: senthilkumarsoundararajan/java-maven-app:8
+        image: senthilkumarsoundararajan/java-maven-app:9
         ports:
         - containerPort: 8080
 ---
